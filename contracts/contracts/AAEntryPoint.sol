@@ -3,4 +3,4 @@ pragma solidity ^0.8.24;
 
 import "@account-abstraction/contracts/core/EntryPoint.sol";
 
-contract CustomEntryPoint is EntryPoint {}
+contract AAEntryPoint is EntryPoint {}

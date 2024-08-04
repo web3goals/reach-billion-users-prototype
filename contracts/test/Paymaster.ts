@@ -16,7 +16,7 @@ describe("Paymaster", function () {
     );
     const accountFactoryContract = await accountFactoryContractFactory.deploy();
     const entryPointContractFactory = await ethers.getContractFactory(
-      "CustomEntryPoint"
+      "AAEntryPoint"
     );
     const entryPointContract = await entryPointContractFactory.deploy();
     const paymasterContractFactory = await ethers.getContractFactory(
