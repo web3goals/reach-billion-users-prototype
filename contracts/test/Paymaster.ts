@@ -100,19 +100,34 @@ describe("Paymaster", function () {
     );
     // console.log("callData:", callData);
 
+    const initCallGasLimit = await ethers.provider.estimateGas({
+      from: entryPointContract,
+      to: sender,
+      data: callData,
+    });
+    const initAddr = ethers.dataSlice(initCode, 0, 20);
+    const initCallData = ethers.dataSlice(initCode, 20);
+    const initVerificationGasLimit = await ethers.provider.estimateGas({
+      from: entryPointContract,
+      to: initAddr,
+      data: initCallData,
+    });
+
+    const block = await ethers.provider.getBlock("latest");
+
     const userOp: UserOperation = {
       sender: sender as `0x${string}`,
       nonce: nonce,
       initCode: initCode,
       callData: callData,
-      callGasLimit: 10_000_000,
-      verificationGasLimit: 500_000,
-      preVerificationGas: 100_000,
-      maxFeePerGas: ethers.parseUnits("2", "gwei"),
-      maxPriorityFeePerGas: ethers.parseUnits("2", "gwei"),
+      callGasLimit: initCallGasLimit + BigInt(55_000),
+      verificationGasLimit: initVerificationGasLimit + BigInt(150_000),
+      preVerificationGas: 21_000,
+      maxFeePerGas: block!.baseFeePerGas! + BigInt(1e9),
+      maxPriorityFeePerGas: BigInt(1e9), // 1 gwei
       paymaster: await paymasterContract.getAddress(),
       paymasterData: "0x",
-      paymasterVerificationGasLimit: 30000,
+      paymasterVerificationGasLimit: 3e5,
       paymasterPostOpGasLimit: 0,
       signature: "0x",
     };
