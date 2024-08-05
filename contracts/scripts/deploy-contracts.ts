@@ -14,6 +14,35 @@ async function main() {
       `Contract 'USDToken' deployed to: ${await contract.getAddress()}`
     );
   }
+
+  if (!CONTRACTS[network].entryPoint) {
+    const contractFactory = await ethers.getContractFactory("AAEntryPoint");
+    const contract = await contractFactory.deploy();
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'AAEntryPoint' deployed to: ${await contract.getAddress()}`
+    );
+  }
+
+  if (!CONTRACTS[network].accountFactory) {
+    const contractFactory = await ethers.getContractFactory("AccountFactory");
+    const contract = await contractFactory.deploy();
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'AccountFactory' deployed to: ${await contract.getAddress()}`
+    );
+  }
+
+  if (!CONTRACTS[network].paymaster && CONTRACTS[network].entryPoint) {
+    const contractFactory = await ethers.getContractFactory("Paymaster");
+    const contract = await contractFactory.deploy(
+      CONTRACTS[network].entryPoint
+    );
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'Paymaster' deployed to: ${await contract.getAddress()}`
+    );
+  }
 }
 
 main().catch((error) => {
