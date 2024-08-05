@@ -1,7 +1,7 @@
 "use client";
 
-import { RBAProvider, useRBA } from "@/components/rba-provider";
-import { usdTokenAbi } from "@/contracts/abi/usdToken";
+import { RBAProvider, useRBA } from "@/library/components/rba-provider";
+import { usdTokenAbi } from "@/library/contracts/abi/usdToken";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 

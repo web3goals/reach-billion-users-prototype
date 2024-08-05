@@ -1,8 +1,8 @@
-import { accountAbi } from "@/contracts/abi/account";
-import { accountFactoryAbi } from "@/contracts/abi/accountFactory";
-import { entryPointAbi } from "@/contracts/abi/entryPoint";
-import { getTonEthAccount } from "@/lib/localStorage";
-import { packUserOperation, UserOperation } from "@/lib/userOperations";
+import { accountAbi } from "@/library/abi/account";
+import { accountFactoryAbi } from "@/library/abi/accountFactory";
+import { entryPointAbi } from "@/library/abi/entryPoint";
+import { getTonEthAccount } from "@/library/lib/localStorage";
+import { packUserOperation, UserOperation } from "@/library/lib/userOperations";
 import {
   TonConnectUIProvider,
   useTonAddress,
@@ -18,7 +18,6 @@ import {
   encodeFunctionData,
   Hex,
   http,
-  slice,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { optimismSepolia } from "viem/chains";
