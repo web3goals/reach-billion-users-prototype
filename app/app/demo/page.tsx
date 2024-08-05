@@ -2,7 +2,8 @@
 
 import { RBAProvider, useRBA } from "@/components/rba-provider";
 import { usdTokenAbi } from "@/contracts/abi/usdToken";
-import { encodeFunctionData } from "viem";
+import { Address, createPublicClient, encodeFunctionData, http } from "viem";
+import { optimismSepolia } from "viem/chains";
 
 export default function DemoPage() {
   return (
@@ -20,8 +21,14 @@ export default function DemoPage() {
 }
 
 function DemoFunctions() {
-  const { tonAddress, tonConnect, tonDisconnect, ethAddress, ethExecute } =
-    useRBA();
+  const {
+    tonAddress,
+    tonConnect,
+    tonDisconnect,
+    ethAddress,
+    ethExecute,
+    getEthAaAddress,
+  } = useRBA();
 
   async function mintUsdt() {
     try {
@@ -43,9 +50,22 @@ function DemoFunctions() {
     }
   }
 
-  // TODO: Implement
   async function getUsdtBalance() {
     try {
+      const network = "optimismSepolia";
+      const ethAaAddress = await getEthAaAddress?.(network);
+      const publicClient = createPublicClient({
+        chain: optimismSepolia,
+        transport: http(),
+      });
+      console.log({ ethAaAddress });
+      const balance = await publicClient.readContract({
+        address: "0x96E6AF6E9e400d0Cd6a4045F122df22BCaAAca59",
+        abi: usdTokenAbi,
+        functionName: "balanceOf",
+        args: [ethAaAddress as Address],
+      });
+      console.log({ balance });
     } catch (error) {
       console.error(error);
     }
@@ -65,7 +85,7 @@ function DemoFunctions() {
       <button className="bg-gray-800 p-4" onClick={() => mintUsdt()}>
         Mint USDT
       </button>
-      <button className="bg-gray-800 p-4" onClick={() => mintUsdt()}>
+      <button className="bg-gray-800 p-4" onClick={() => getUsdtBalance()}>
         Get USDT Balance
       </button>
     </div>

@@ -40,7 +40,7 @@ type RBAContextType = {
     executeDestination: Address,
     executeFunction: Hex
   ) => Promise<Address>;
-  getEthAaAddress?: () => Promise<Address>;
+  getEthAaAddress?: (network: string) => Promise<Address>;
 };
 
 const contracts: { [key: string]: Contracts } = {
@@ -201,9 +201,58 @@ function RBAProvider({ children }: { children: React.ReactNode }) {
     return tx;
   }
 
-  // TODO: Implement
-  async function getEthAaAddress(): Promise<Address> {
-    return "0x0";
+  async function getEthAaAddress(network: string): Promise<Address> {
+    if (!ethAddress) {
+      throw new Error("Ethereum address is not defined");
+    }
+
+    let chain = contracts[network]?.chain;
+    if (!chain) {
+      throw new Error("Network is not supported");
+    }
+
+    const fakeBundlerAccount = privateKeyToAccount(
+      process.env.NEXT_PUBLIC_FAKE_BUNDLER_ACCOUNT_PRIVATE_KEY as `0x${string}`
+    );
+    console.log("fakeBundler:", fakeBundlerAccount.address);
+
+    const fakeBundlerWalletClient = createWalletClient({
+      account: fakeBundlerAccount,
+      chain: chain,
+      transport: http(),
+    });
+
+    let chainContracts = contracts[network];
+    if (!chainContracts) {
+      throw new Error("Contracts are not defined");
+    }
+
+    let initCode =
+      chainContracts.accountFactory +
+      encodeFunctionData({
+        abi: accountFactoryAbi,
+        functionName: "createAccount",
+        args: [ethAddress],
+      }).slice(2);
+    console.log("initCode:", initCode);
+
+    let sender;
+    try {
+      await fakeBundlerWalletClient.writeContract({
+        address: chainContracts.entryPoint,
+        abi: entryPointAbi,
+        functionName: "getSenderAddress",
+        args: [initCode as `0x${string}`],
+      });
+    } catch (error: any) {
+      const value = decodeErrorResult({
+        abi: entryPointAbi,
+        data: error?.cause?.cause?.cause?.cause?.cause?.data as `0x${string}`,
+      });
+      sender = value.args[0];
+    }
+    console.log("sender:", sender);
+    return sender as Address;
   }
 
   useEffect(() => {
