@@ -105,13 +105,13 @@ function RBAProvider({ children }: { children: React.ReactNode }) {
       throw new Error("Contracts are not defined");
     }
 
-    let initCode =
-      chainContracts.accountFactory +
-      encodeFunctionData({
-        abi: accountFactoryAbi,
-        functionName: "createAccount",
-        args: [ethAddress],
-      }).slice(2);
+    const initAddr = chainContracts.accountFactory;
+    const initCallData = encodeFunctionData({
+      abi: accountFactoryAbi,
+      functionName: "createAccount",
+      args: [ethAddress],
+    });
+    let initCode = initAddr + initCallData.slice(2);
     console.log("initCode:", initCode);
 
     let sender;
@@ -161,8 +161,6 @@ function RBAProvider({ children }: { children: React.ReactNode }) {
     });
     console.log("initCallGasLimit:", initCallGasLimit);
 
-    const initAddr = slice(initCode as `0x${string}`, 0, 20);
-    const initCallData = slice(initCode as `0x${string}`, 20);
     const initVerificationGasLimit = await publicClient.estimateGas({
       account: chainContracts.entryPoint,
       to: initAddr,
