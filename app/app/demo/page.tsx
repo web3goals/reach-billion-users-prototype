@@ -1,6 +1,8 @@
 "use client";
 
 import { RBAProvider, useRBA } from "@/components/rba-provider";
+import { usdTokenAbi } from "@/contracts/abi/usdToken";
+import { encodeFunctionData } from "viem";
 
 export default function DemoPage() {
   return (
@@ -22,10 +24,31 @@ function DemoFunctions() {
     useRBA();
 
   async function mintUsdt() {
-    const executeDestination = "0x0"; // USDT contract
-    const executeFunction = "0x0"; // Encoded function data
-    const txHash = await ethExecute?.(executeDestination, executeFunction);
-    console.log({ txHash });
+    try {
+      const network = "optimismSepolia";
+      const executeDestination = "0x96E6AF6E9e400d0Cd6a4045F122df22BCaAAca59";
+      const executeFunction = encodeFunctionData({
+        abi: usdTokenAbi,
+        functionName: "mint",
+        args: [BigInt(2)],
+      });
+      const txHash = await ethExecute?.(
+        network,
+        executeDestination,
+        executeFunction
+      );
+      console.log({ txHash });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  // TODO: Implement
+  async function getUsdtBalance() {
+    try {
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
@@ -37,10 +60,13 @@ function DemoFunctions() {
       <button className="bg-gray-800 p-4" onClick={() => tonDisconnect?.()}>
         Disconnect Ton
       </button>
-      <div className="w-full h-[2px] bg-gray-800 my-4" />
+      <div className="w-full h-[2px] bg-gray-800" />
       <p className="text-sm">Eth Address: {ethAddress || "None"}</p>
       <button className="bg-gray-800 p-4" onClick={() => mintUsdt()}>
         Mint USDT
+      </button>
+      <button className="bg-gray-800 p-4" onClick={() => mintUsdt()}>
+        Get USDT Balance
       </button>
     </div>
   );
