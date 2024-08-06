@@ -7,7 +7,7 @@ import { optimismSepolia } from "viem/chains";
 
 export default function DemoPage() {
   return (
-    <RBUProvider>
+    <RBUProvider apiKey="xyz">
       <main className="container py-10 lg:px-64">
         <h1 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tighter">
           DEMO

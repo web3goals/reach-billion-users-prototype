@@ -53,7 +53,13 @@ const contracts: { [key: string]: Contracts } = {
 
 const RBUContext = createContext<RBUContextType>({});
 
-function RBUProvider({ children }: { children: React.ReactNode }) {
+function RBUProvider({
+  apiKey,
+  children,
+}: {
+  apiKey: string;
+  children: React.ReactNode;
+}) {
   const [tonConnectUI] = useTonConnectUI();
   const tonAddress = useTonAddress();
   const [ethAddress, setEthAddress] = useState<Address | undefined>();
@@ -277,12 +283,18 @@ function RBUProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-function RBUProviderWrapper({ children }: { children: React.ReactNode }) {
+function RBUProviderWrapper({
+  apiKey,
+  children,
+}: {
+  apiKey: string;
+  children: React.ReactNode;
+}) {
   return (
     <TonConnectUIProvider
       manifestUrl={process.env.NEXT_PUBLIC_TON_MANIFEST_URL}
     >
-      <RBUProvider>{children}</RBUProvider>
+      <RBUProvider apiKey={apiKey}>{children}</RBUProvider>
     </TonConnectUIProvider>
   );
 }
