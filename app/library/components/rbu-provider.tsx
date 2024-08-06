@@ -29,7 +29,7 @@ type Contracts = {
   paymaster: Address;
 };
 
-type RBAContextType = {
+type RBUContextType = {
   tonAddress?: string;
   tonConnect?: () => Promise<void>;
   tonDisconnect?: () => Promise<void>;
@@ -51,9 +51,9 @@ const contracts: { [key: string]: Contracts } = {
   },
 };
 
-const RBAContext = createContext<RBAContextType>({});
+const RBUContext = createContext<RBUContextType>({});
 
-function RBAProvider({ children }: { children: React.ReactNode }) {
+function RBUProvider({ children }: { children: React.ReactNode }) {
   const [tonConnectUI] = useTonConnectUI();
   const tonAddress = useTonAddress();
   const [ethAddress, setEthAddress] = useState<Address | undefined>();
@@ -262,7 +262,7 @@ function RBAProvider({ children }: { children: React.ReactNode }) {
   }, [tonAddress]);
 
   return (
-    <RBAContext.Provider
+    <RBUContext.Provider
       value={{
         tonAddress: tonAddress,
         tonConnect: () => tonConnectUI.openModal(),
@@ -273,22 +273,22 @@ function RBAProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </RBAContext.Provider>
+    </RBUContext.Provider>
   );
 }
 
-function RBAProviderWrapper({ children }: { children: React.ReactNode }) {
+function RBUProviderWrapper({ children }: { children: React.ReactNode }) {
   return (
     <TonConnectUIProvider
       manifestUrl={process.env.NEXT_PUBLIC_TON_MANIFEST_URL}
     >
-      <RBAProvider>{children}</RBAProvider>
+      <RBUProvider>{children}</RBUProvider>
     </TonConnectUIProvider>
   );
 }
 
-function useRBA() {
-  return useContext(RBAContext);
+function useRBU() {
+  return useContext(RBUContext);
 }
 
-export { RBAProviderWrapper as RBAProvider, useRBA };
+export { RBUProviderWrapper as RBUProvider, useRBU };

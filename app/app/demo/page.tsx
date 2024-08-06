@@ -1,13 +1,13 @@
 "use client";
 
-import { RBAProvider, useRBA } from "@/library/components/rba-provider";
-import { usdTokenAbi } from "@/library/contracts/abi/usdToken";
+import { RBUProvider, useRBU } from "@/library/components/rbu-provider";
+import { usdTokenAbi } from "@/library/abi/usdToken";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 
 export default function DemoPage() {
   return (
-    <RBAProvider>
+    <RBUProvider>
       <main className="container py-10 lg:px-64">
         <h1 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tighter">
           DEMO
@@ -16,7 +16,7 @@ export default function DemoPage() {
           <DemoFunctions />
         </div>
       </main>
-    </RBAProvider>
+    </RBUProvider>
   );
 }
 
@@ -28,7 +28,7 @@ function DemoFunctions() {
     ethAddress,
     ethExecute,
     getEthAaAddress,
-  } = useRBA();
+  } = useRBU();
 
   async function mintUsdt() {
     try {

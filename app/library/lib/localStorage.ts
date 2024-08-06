@@ -8,7 +8,7 @@ export interface TonEthAccount {
 }
 
 export function getTonEthAccount(tonAddress: string): TonEthAccount {
-  const localStorageKey = "rba-ton-eth-accounts";
+  const localStorageKey = "rbu-ton-eth-accounts";
   const localStorageValue = localStorage.getItem(localStorageKey);
   const accounts: TonEthAccount[] = localStorageValue
     ? JSON.parse(localStorageValue)

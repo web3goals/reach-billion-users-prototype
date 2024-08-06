@@ -1,4 +1,4 @@
 // TODO: Implement
-export function RBAConnectButton() {
+export function RBUConnectButton() {
   return <></>;
 }
