@@ -43,6 +43,20 @@ async function main() {
       `Contract 'Paymaster' deployed to: ${await contract.getAddress()}`
     );
   }
+
+  if (!CONTRACTS[network].cryptoSpacePrison) {
+    const contractFactory = await ethers.getContractFactory(
+      "CryptoSpacePrison"
+    );
+    const contract = await contractFactory.deploy(
+      ethers.parseEther("0"),
+      ethers.parseEther("0.001")
+    );
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'CryptoSpacePrison' deployed to: ${await contract.getAddress()}`
+    );
+  }
 }
 
 main().catch((error) => {
