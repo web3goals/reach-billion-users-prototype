@@ -1,7 +1,7 @@
 "use client";
 
 import { RBUProvider, useRBU } from "@/library/components/rbu-provider";
-import { usdTokenAbi } from "@/library/abi/usdToken";
+import { usdTokenAbi } from "@/abi/usdToken";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 
