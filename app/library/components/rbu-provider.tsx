@@ -1,3 +1,5 @@
+"use client";
+
 import { accountAbi } from "@/library/abi/account";
 import { accountFactoryAbi } from "@/library/abi/accountFactory";
 import { entryPointAbi } from "@/library/abi/entryPoint";

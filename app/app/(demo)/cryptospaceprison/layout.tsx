@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/toaster";
+import { RBUProvider } from "@/library/components/rbu-provider";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -16,13 +17,17 @@ export default function CryptoSpacePrisonLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const rbaApiKey = "qkgySNGqQm9TLvWkUNllqZxVefqXzcK";
+
   return (
-    <div className="relative flex min-h-screen flex-col">
-      <div className="flex-1">
-        {children}
-        <SiteFooter />
-        <Toaster />
+    <RBUProvider apiKey={rbaApiKey}>
+      <div className="relative flex min-h-screen flex-col">
+        <div className="flex-1">
+          {children}
+          <SiteFooter />
+          <Toaster />
+        </div>
       </div>
-    </div>
+    </RBUProvider>
   );
 }
