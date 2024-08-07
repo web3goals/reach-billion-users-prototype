@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function LandingPage() {
   return (
-    <div className="container flex flex-col items-center py-10 xl:px-80">
+    <main className="container flex flex-col items-center py-10 xl:px-80">
       <h1 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-center max-w-[820px]">
         Attract a billion Telegram users to your dApp on Ethereum
       </h1>
@@ -26,6 +26,6 @@ export default function LandingPage() {
           className="w-full"
         />
       </div>
-    </div>
+    </main>
   );
 }
