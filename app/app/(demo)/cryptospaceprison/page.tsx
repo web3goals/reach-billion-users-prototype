@@ -5,7 +5,7 @@ import { usdTokenAbi } from "@/abi/usdToken";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 
-export default function DemoPage() {
+export default function CryptoSpacePrisonPage() {
   return (
     <RBUProvider apiKey="xyz">
       <main className="container py-10 lg:px-64">
