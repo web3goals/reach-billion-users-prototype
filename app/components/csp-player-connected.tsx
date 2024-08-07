@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useRBU } from "@/library/components/rbu-provider";
 import { ClassValue } from "clsx";
+import CryptoSpacePrisonPlayerCharacters from "./csp-player-characters";
 import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
 
 export default function CryptoSpacePrisonPlayerConnected(props: {
   className?: ClassValue;
 }) {
-  const { tonAddress, ethAddress, tonDisconnect, ethExecute } = useRBU();
+  const { tonAddress, ethAddress, tonDisconnect } = useRBU();
 
   return (
     <div
@@ -63,11 +64,11 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
               Characters:
             </p>
             {/* TODO: Implement */}
-            <p className="text-sm break-all">❓</p>
+            <CryptoSpacePrisonPlayerCharacters />
           </div>
         </div>
         {/* Actions */}
-        <div className="flex flex-col gap-3 mt-4">
+        <div className="flex flex-col gap-3 mt-8">
           <CryptoSpacePrisonPlayerMintPickpocketButton />
           {/* TODO: Implement */}
           <Button variant="secondary" onClick={() => {}}>
