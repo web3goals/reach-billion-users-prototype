@@ -22,6 +22,8 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { optimismSepolia } from "viem/chains";
 
+type Network = "optimismSepolia";
+
 type Contracts = {
   chain: Chain;
   entryPoint: Address;
@@ -34,8 +36,9 @@ type RBUContextType = {
   tonConnect?: () => Promise<void>;
   tonDisconnect?: () => Promise<void>;
   ethAddress?: Address;
+  // TODO: Return hash and link to blockscout
   ethExecute?: (
-    network: string,
+    network: Network,
     executeDestination: Address,
     executeFunction: Hex
   ) => Promise<Address>;
@@ -200,6 +203,7 @@ function RBUProvider({
       functionName: "handleOps",
       args: [[packedUserOp], fakeBundlerAccount.address],
     });
+    console.log("tx:", tx);
 
     return tx;
   }

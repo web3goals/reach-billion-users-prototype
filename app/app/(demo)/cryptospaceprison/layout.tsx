@@ -21,8 +21,8 @@ export default function CryptoSpacePrisonLayout({
       <div className="flex-1">
         {children}
         <SiteFooter />
+        <Toaster />
       </div>
-      <Toaster />
     </div>
   );
 }

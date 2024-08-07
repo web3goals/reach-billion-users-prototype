@@ -1,10 +1,17 @@
 "use client";
 
+import { cryptoSpacePrisonAbi } from "@/abi/cryptoSpacePrison";
 import { usdTokenAbi } from "@/abi/usdToken";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ToastAction } from "@/components/ui/toast";
+import { toast } from "@/components/ui/use-toast";
+import useError from "@/hooks/useError";
 import { RBUProvider, useRBU } from "@/library/components/rbu-provider";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 
@@ -75,9 +82,43 @@ function PlayerConnect() {
   );
 }
 
-// TODO: Implement
 function PlayerConnected() {
-  const { tonAddress, ethAddress, tonDisconnect } = useRBU();
+  const { handleError } = useError();
+  const { tonAddress, ethAddress, tonDisconnect, ethExecute } = useRBU();
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+
+  async function mintPickpocket() {
+    try {
+      setIsFormSubmitting(true);
+      const network = "optimismSepolia";
+      const executeDestination = "0xdfE15Cc65697c04C083982B8a053E2FE4cf54669";
+      const executeFunction = encodeFunctionData({
+        abi: cryptoSpacePrisonAbi,
+        functionName: "mintPickpocket",
+      });
+      const txHash = await ethExecute?.(
+        network,
+        executeDestination,
+        executeFunction
+      );
+      toast({
+        title: "Pickpocket minted 🤘",
+        description: "Refresh the page to see the updates",
+        action: (
+          <Link
+            href={`https://optimism-sepolia.blockscout.com/tx/${txHash}`}
+            target="_blank"
+          >
+            <ToastAction altText="Open Blockscout">Blockscout</ToastAction>
+          </Link>
+        ),
+      });
+    } catch (error: any) {
+      handleError(error, true);
+    } finally {
+      setIsFormSubmitting(false);
+    }
+  }
 
   return (
     <div className="w-full flex flex-row gap-4 border rounded max-w-[480px] px-6 py-8 mt-10">
@@ -131,7 +172,14 @@ function PlayerConnected() {
         {/* Actions */}
         <div className="flex flex-col gap-3 mt-4">
           {/* TODO: Implement */}
-          <Button variant="default" onClick={() => {}}>
+          <Button
+            variant="default"
+            onClick={() => mintPickpocket()}
+            disabled={isFormSubmitting}
+          >
+            {isFormSubmitting && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            )}
             👶️ Mint common pickpocket FOR FREE
           </Button>
           {/* TODO: Implement */}
