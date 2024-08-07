@@ -32,8 +32,9 @@ describe("AccountAbstraction", function () {
     );
     const usdTokenContract = await new USDToken__factory(deployer).deploy();
     const cspContract = await new CryptoSpacePrison__factory(deployer).deploy(
+      await usdTokenContract.getAddress(),
       ethers.parseEther("0"),
-      ethers.parseEther("0.05")
+      ethers.parseEther("5")
     );
     // Deposit paymaster
     await entryPointContract.depositTo(paymasterContract, {
@@ -163,14 +164,13 @@ describe("AccountAbstraction", function () {
     return { sender: sender, tx: tx.hash };
   }
 
-  it("Should support the main flow", async function () {
+  it("Should use paymaster to mint free character", async function () {
     const {
       fakeBundler,
       userOne,
       accountFactoryContract,
       entryPointContract,
       paymasterContract,
-      usdTokenContract,
       cspContract,
     } = await loadFixture(initFixture);
 
@@ -194,7 +194,7 @@ describe("AccountAbstraction", function () {
     // console.log("tx:", tx);
     // console.log("sender", sender);
 
-    // Check cell
+    // Check characters
     const cell = await cspContract.getCell(sender);
     expect(cell.pickpocketAmount).to.be.equal(1);
     expect(cell.conmanAmount).to.be.equal(0);
@@ -203,5 +203,88 @@ describe("AccountAbstraction", function () {
     expect(
       (await entryPointContract.getDepositInfo(paymasterContract))[0]
     ).to.be.not.equal(ethers.parseEther("1"));
+  });
+
+  it("Should allow token transfers", async function () {
+    const {
+      fakeBundler,
+      userOne,
+      accountFactoryContract,
+      entryPointContract,
+      paymasterContract,
+      usdTokenContract,
+      cspContract,
+    } = await loadFixture(initFixture);
+
+    const { tx, sender } = await sendUserOperation({
+      user: userOne,
+      fakeBundler: fakeBundler,
+      executeDestination: await usdTokenContract.getAddress(),
+      executeFunction: new USDToken__factory().interface.encodeFunctionData(
+        "approve",
+        [await cspContract.getAddress(), 42]
+      ),
+      accountFactoryContract: accountFactoryContract,
+      entryPointContract: entryPointContract,
+      paymasterContract: paymasterContract,
+    });
+    // console.log("tx:", tx);
+    // console.log("sender", sender);
+
+    // Check allowance
+    expect(await usdTokenContract.allowance(sender, cspContract)).to.be.equal(
+      42
+    );
+  });
+
+  it("Should mint paid character", async function () {
+    const {
+      fakeBundler,
+      userOne,
+      accountFactoryContract,
+      entryPointContract,
+      paymasterContract,
+      usdTokenContract,
+      cspContract,
+    } = await loadFixture(initFixture);
+
+    // Allow token transfers
+    const { sender } = await sendUserOperation({
+      user: userOne,
+      fakeBundler: fakeBundler,
+      executeDestination: await usdTokenContract.getAddress(),
+      executeFunction: new USDToken__factory().interface.encodeFunctionData(
+        "approve",
+        [await cspContract.getAddress(), ethers.parseEther("100")]
+      ),
+      accountFactoryContract: accountFactoryContract,
+      entryPointContract: entryPointContract,
+      paymasterContract: paymasterContract,
+    });
+
+    // Mint usd tokens for sender
+    await usdTokenContract.mint(10, sender);
+
+    // Mint paid character
+    await sendUserOperation({
+      user: userOne,
+      fakeBundler: fakeBundler,
+      executeDestination: await cspContract.getAddress(),
+      executeFunction:
+        new CryptoSpacePrison__factory().interface.encodeFunctionData(
+          "mintConman"
+        ),
+      accountFactoryContract: accountFactoryContract,
+      entryPointContract: entryPointContract,
+      paymasterContract: paymasterContract,
+    });
+
+    // Check balance and characters
+    expect(await usdTokenContract.balanceOf(sender)).to.be.equal(
+      ethers.parseEther("5")
+    );
+    const cell = await cspContract.getCell(sender);
+    expect(cell.pickpocketAmount).to.be.equal(0);
+    expect(cell.conmanAmount).to.be.equal(1);
   });
 });
