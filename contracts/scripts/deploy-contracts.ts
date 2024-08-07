@@ -6,15 +6,6 @@ async function main() {
 
   const network = hre.network.name;
 
-  if (!CONTRACTS[network].usdToken) {
-    const contractFactory = await ethers.getContractFactory("USDToken");
-    const contract = await contractFactory.deploy();
-    await contract.waitForDeployment();
-    console.log(
-      `Contract 'USDToken' deployed to: ${await contract.getAddress()}`
-    );
-  }
-
   if (!CONTRACTS[network].entryPoint) {
     const contractFactory = await ethers.getContractFactory("AAEntryPoint");
     const contract = await contractFactory.deploy();
@@ -44,13 +35,23 @@ async function main() {
     );
   }
 
-  if (!CONTRACTS[network].cryptoSpacePrison) {
+  if (!CONTRACTS[network].usdToken) {
+    const contractFactory = await ethers.getContractFactory("USDToken");
+    const contract = await contractFactory.deploy();
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'USDToken' deployed to: ${await contract.getAddress()}`
+    );
+  }
+
+  if (!CONTRACTS[network].cryptoSpacePrison && CONTRACTS[network].usdToken) {
     const contractFactory = await ethers.getContractFactory(
       "CryptoSpacePrison"
     );
     const contract = await contractFactory.deploy(
+      CONTRACTS[network].usdToken,
       ethers.parseEther("0"),
-      ethers.parseEther("0.001")
+      ethers.parseEther("5")
     );
     await contract.waitForDeployment();
     console.log(

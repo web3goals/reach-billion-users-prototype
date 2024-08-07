@@ -2,6 +2,11 @@ export const cryptoSpacePrisonAbi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "paymentToken",
+        type: "address",
+      },
+      {
         internalType: "uint256",
         name: "pickpocketCost",
         type: "uint256",
@@ -14,19 +19,6 @@ export const cryptoSpacePrisonAbi = [
     ],
     stateMutability: "nonpayable",
     type: "constructor",
-  },
-  {
-    inputs: [],
-    name: "_owner",
-    outputs: [
-      {
-        internalType: "address payable",
-        name: "",
-        type: "address",
-      },
-    ],
-    stateMutability: "view",
-    type: "function",
   },
   {
     inputs: [
@@ -79,16 +71,29 @@ export const cryptoSpacePrisonAbi = [
   },
   {
     inputs: [],
+    name: "getPaymentToken",
+    outputs: [
+      {
+        internalType: "address",
+        name: "paymentToken",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "mintConman",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
     name: "mintPickpocket",
     outputs: [],
-    stateMutability: "payable",
+    stateMutability: "nonpayable",
     type: "function",
   },
   {

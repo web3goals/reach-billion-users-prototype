@@ -227,6 +227,11 @@ export const usdTokenAbi = [
         name: "amount",
         type: "uint256",
       },
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
     ],
     name: "mint",
     outputs: [],
