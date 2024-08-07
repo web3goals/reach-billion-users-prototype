@@ -43,7 +43,7 @@ export function SiteHeader() {
               >
                 <DropdownMenuItem>📄 Docs</DropdownMenuItem>
               </Link>
-              <Link href="/cryptospaceprison">
+              <Link href="/cryptospaceprison" target="_blank">
                 <DropdownMenuItem>🚀 Demo</DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
