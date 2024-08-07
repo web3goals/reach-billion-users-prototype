@@ -8,7 +8,7 @@ contract USDToken is ERC20 {
         _mint(msg.sender, 1000 * 10 ** decimals());
     }
 
-    function mint(uint256 amount) external {
-        _mint(msg.sender, amount * 10 ** decimals());
+    function mint(uint256 amount, address recipient) external {
+        _mint(recipient, amount * 10 ** decimals());
     }
 }
