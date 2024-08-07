@@ -22,8 +22,6 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { optimismSepolia } from "viem/chains";
 
-type Network = "optimismSepolia";
-
 type Contracts = {
   chain: Chain;
   entryPoint: Address;
@@ -38,7 +36,7 @@ type RBUContextType = {
   ethAddress?: Address;
   // TODO: Return hash and link to blockscout
   ethExecute?: (
-    network: Network,
+    network: string,
     executeDestination: Address,
     executeFunction: Hex
   ) => Promise<Address>;
