@@ -13,9 +13,7 @@ export default function LandingPage() {
         headaches in a few clicks
       </h2>
       <Link href="/dashboard">
-        <Button className="mt-6" size="lg">
-          🪄 Open Dashboard
-        </Button>
+        <Button className="mt-6">🪄 Open Dashboard</Button>
       </Link>
       <div className="flex flex-col items-center max-w-[640px] mt-8">
         <Image
