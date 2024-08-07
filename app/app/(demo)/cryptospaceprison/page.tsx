@@ -1,25 +1,157 @@
 "use client";
 
-import { RBUProvider, useRBU } from "@/library/components/rbu-provider";
 import { usdTokenAbi } from "@/abi/usdToken";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { RBUProvider, useRBU } from "@/library/components/rbu-provider";
+import Image from "next/image";
 import { Address, createPublicClient, encodeFunctionData, http } from "viem";
 import { optimismSepolia } from "viem/chains";
 
 export default function CryptoSpacePrisonPage() {
   return (
     <RBUProvider apiKey="xyz">
-      <main className="container py-10 lg:px-64">
-        <h1 className="text-5xl md:text-6xl font-extrabold leading-tight tracking-tighter">
-          DEMO
-        </h1>
-        <div className="mt-4">
-          <DemoFunctions />
-        </div>
+      <main className="container flex flex-col items-center py-10">
+        <Cover />
+        <Player />
       </main>
     </RBUProvider>
   );
 }
 
+function Cover() {
+  return (
+    <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center max-w-[360px] mt-8">
+        <Image
+          src="/images/cryptospaceprison.gif"
+          alt="Crypto Space Prison"
+          priority={false}
+          width="100"
+          height="100"
+          sizes="100vw"
+          className="w-full"
+        />
+      </div>
+      <p className="text-sm text-center text-muted-foreground mt-4">
+        NFT-game created by the Community for Fun
+      </p>
+      <h1 className="text-4xl md:text-6xl font-extrabold tracking-tighter text-center max-w-[820px] mt-2 md:mt-0">
+        Crypto Space Prison
+      </h1>
+      <p className="text-center text-muted-foreground mt-4">
+        ⚡ Collect prisoners, own prison cells, earn respect tokens
+      </p>
+      <p className="text-center text-muted-foreground mt-2">
+        🤝 Influence the game with the community
+      </p>
+      <p className="text-center  text-muted-foreground mt-2">
+        🎲 Play mini-games and participate in seasons
+      </p>
+    </div>
+  );
+}
+
+function Player() {
+  const { tonAddress, ethAddress } = useRBU();
+
+  if (tonAddress && ethAddress) {
+    return <PlayerConnected />;
+  }
+
+  return <PlayerConnect />;
+}
+
+function PlayerConnect() {
+  const { tonConnect } = useRBU();
+
+  return (
+    <div className="flex flex-row gap-4 mt-6">
+      <Button onClick={() => tonConnect?.()}>Connect Telegram</Button>
+      <Button variant="secondary" disabled>
+        Connect Ethererum Wallet
+      </Button>
+    </div>
+  );
+}
+
+// TODO: Implement
+function PlayerConnected() {
+  const { tonAddress, ethAddress, tonDisconnect } = useRBU();
+
+  return (
+    <div className="w-full flex flex-row gap-4 border rounded max-w-[480px] px-6 py-8 mt-10">
+      <div>
+        {/* Avatar */}
+        <Avatar className="size-16">
+          <AvatarImage src="" alt="Icon" />
+          <AvatarFallback className="text-2xl bg-primary">👤</AvatarFallback>
+        </Avatar>
+      </div>
+      <div className="w-full">
+        {/* Label */}
+        <p className="text-xl font-bold">Player</p>
+        {/* Params */}
+        <div className="flex flex-col gap-2 mt-4">
+          <div className="flex flex-col md:flex-row md:gap-3">
+            <p className="min-w-[80px] text-sm text-muted-foreground">
+              Ton Address:
+            </p>
+            <p className="text-sm break-all">{tonAddress}</p>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-3">
+            <p className="min-w-[80px] text-sm text-muted-foreground">
+              Ton Balance:
+            </p>
+            {/* TODO: Implement */}
+            <p className="text-sm break-all">❓</p>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-3">
+            {/* TODO: Use blockscout link */}
+            <p className="min-w-[80px] text-sm text-muted-foreground">
+              Eth Address:
+            </p>
+            <p className="text-sm break-all">{ethAddress}</p>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-3">
+            <p className="min-w-[80px] text-sm text-muted-foreground">
+              Eth Balance:
+            </p>
+            {/* TODO: Implement */}
+            <p className="text-sm break-all">❓</p>
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-3">
+            <p className="min-w-[80px] text-sm text-muted-foreground">
+              Characters:
+            </p>
+            {/* TODO: Implement */}
+            <p className="text-sm break-all">❓</p>
+          </div>
+        </div>
+        {/* Actions */}
+        <div className="flex flex-col gap-3 mt-4">
+          {/* TODO: Implement */}
+          <Button variant="default" onClick={() => {}}>
+            👶️ Mint common pickpocket FOR FREE
+          </Button>
+          {/* TODO: Implement */}
+          <Button variant="secondary" onClick={() => {}}>
+            🥸 Mint legendary conman FOR 0.01 ETH
+          </Button>
+          {/* TODO: Implement */}
+          <Button variant="outline" onClick={() => {}}>
+            🏦 Buy ETH for Toncoin
+          </Button>
+          <Button variant="outline" onClick={() => tonDisconnect?.()}>
+            👋 Disconnect Telegram
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// TODO: Delete
 function DemoFunctions() {
   const {
     tonAddress,

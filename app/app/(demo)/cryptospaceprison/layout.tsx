@@ -1,3 +1,4 @@
+import { SiteFooter } from "@/components/site-footer";
 import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
 
@@ -17,7 +18,10 @@ export default function CryptoSpacePrisonLayout({
 }>) {
   return (
     <div className="relative flex min-h-screen flex-col">
-      <div className="flex-1">{children}</div>
+      <div className="flex-1">
+        {children}
+        <SiteFooter />
+      </div>
       <Toaster />
     </div>
   );
