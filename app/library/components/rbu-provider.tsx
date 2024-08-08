@@ -14,6 +14,7 @@ import {
   TonConnectUIProvider,
   useTonAddress,
   useTonConnectUI,
+  useTonWallet,
 } from "@tonconnect/ui-react";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
@@ -26,11 +27,13 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { contractsConfig } from "../config/contracts";
+import axios from "axios";
 
 type RBUContextType = {
   tonAddress: string | undefined;
   tonConnect: () => Promise<void>;
   tonDisconnect: () => Promise<void>;
+  getTonBalance: () => Promise<bigint>;
   ethAddress: Address | undefined;
   ethExecute: (
     network: string,
@@ -62,9 +65,6 @@ function RBUProvider({
       console.error("Failed to init address:", error);
     }
   }
-
-  // TODO: Implement
-  async function initEthSenderAddress() {}
 
   async function ethExecute(
     network: string,
@@ -184,6 +184,16 @@ function RBUProvider({
     return sender;
   }
 
+  async function getTonBalance(): Promise<bigint> {
+    if (!tonAddress) {
+      throw new Error("Ton address is not defined");
+    }
+    const { data } = await axios.get(
+      `https://toncenter.com/api/v3/account?address=${tonAddress}`
+    );
+    return BigInt(data.balance);
+  }
+
   useEffect(() => {
     if (tonAddress) {
       initEthAddress();
@@ -199,6 +209,7 @@ function RBUProvider({
         tonAddress: tonAddress,
         tonConnect: () => tonConnectUI.openModal(),
         tonDisconnect: () => tonConnectUI.disconnect(),
+        getTonBalance: getTonBalance,
         ethAddress: ethAddress,
         ethExecute: ethExecute,
         getEthSenderAddress: getEthSenderAddress,

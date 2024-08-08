@@ -9,6 +9,7 @@ import CryptoSpacePrisonPlayerCharacters from "./csp-player-characters";
 import CryptoSpacePrisonPlayerEthBalance from "./csp-player-eth-balance";
 import CryptoSpacePrisonPlayerMintConmanButton from "./csp-player-mint-conman-button";
 import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
+import CryptoSpacePrisonPlayerTonBalance from "./csp-player-ton-balance";
 
 export default function CryptoSpacePrisonPlayerConnected(props: {
   className?: ClassValue;
@@ -44,8 +45,7 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
             <p className="min-w-[80px] text-sm text-muted-foreground">
               Ton Balance:
             </p>
-            {/* TODO: Implement */}
-            <p className="text-sm break-all">❓</p>
+            <CryptoSpacePrisonPlayerTonBalance />
           </div>
           <div className="flex flex-col md:flex-row md:gap-3">
             <p className="min-w-[80px] text-sm text-muted-foreground">
