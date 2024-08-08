@@ -3,8 +3,11 @@
 import { accountAbi } from "@/library/abi/account";
 import { accountFactoryAbi } from "@/library/abi/accountFactory";
 import { entryPointAbi } from "@/library/abi/entryPoint";
+import {
+  packUserOperation,
+  UserOperation,
+} from "@/library/lib/accountAbstraction";
 import { getTonEthAccount } from "@/library/lib/localStorage";
-import { packUserOperation, UserOperation } from "@/library/lib/userOperations";
 import {
   TonConnectUIProvider,
   useTonAddress,
@@ -13,48 +16,31 @@ import {
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   Address,
-  Chain,
   createPublicClient,
   createWalletClient,
   decodeErrorResult,
   encodeFunctionData,
+  Hash,
   Hex,
   http,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { optimismSepolia } from "viem/chains";
-
-type Contracts = {
-  chain: Chain;
-  entryPoint: Address;
-  accountFactory: Address;
-  paymaster: Address;
-};
+import { contractsConfig } from "../config/contracts";
 
 type RBUContextType = {
-  tonAddress?: string;
-  tonConnect?: () => Promise<void>;
-  tonDisconnect?: () => Promise<void>;
-  ethAddress?: Address;
-  // TODO: Return hash and link to blockscout
-  ethExecute?: (
+  tonAddress: string | undefined;
+  tonConnect: () => Promise<void>;
+  tonDisconnect: () => Promise<void>;
+  ethAddress: Address | undefined;
+  ethExecute: (
     network: string,
     executeDestination: Address,
     executeFunction: Hex
-  ) => Promise<Address>;
-  getEthAaAddress?: (network: string) => Promise<Address>;
+  ) => Promise<{ txHash: Hash; txExplorerLink: string }>;
+  getEthAaAddress: (network: string) => Promise<Address>;
 };
 
-const contracts: { [key: string]: Contracts } = {
-  optimismSepolia: {
-    chain: optimismSepolia,
-    entryPoint: "0xFe0AeD5cBEE89869FF505e10A5eBb75e9FC819D7",
-    accountFactory: "0x1e4712A93beEc0aa26151CF44061eE91DD56f921",
-    paymaster: "0x2168609301437822c7AD3f35114B10941866F20a",
-  },
-};
-
-const RBUContext = createContext<RBUContextType>({});
+const RBUContext = createContext<RBUContextType | null>(null);
 
 function RBUProvider({
   apiKey,
@@ -82,12 +68,12 @@ function RBUProvider({
     network: string,
     executeDestination: Address,
     executeFunction: Hex
-  ): Promise<Hex> {
+  ): Promise<{ txHash: Hash; txExplorerLink: string }> {
     if (!ethAddress) {
       throw new Error("Ethereum address is not defined");
     }
 
-    let chain = contracts[network]?.chain;
+    let chain = contractsConfig[network]?.chain;
     if (!chain) {
       throw new Error("Network is not supported");
     }
@@ -108,7 +94,7 @@ function RBUProvider({
       transport: http(),
     });
 
-    let chainContracts = contracts[network];
+    let chainContracts = contractsConfig[network];
     if (!chainContracts) {
       throw new Error("Contracts are not defined");
     }
@@ -205,7 +191,10 @@ function RBUProvider({
     });
     console.log("tx:", tx);
 
-    return tx;
+    return {
+      txHash: tx,
+      txExplorerLink: `${chainContracts.explorer}/tx/${tx}`,
+    };
   }
 
   async function getEthAaAddress(network: string): Promise<Address> {
@@ -213,7 +202,7 @@ function RBUProvider({
       throw new Error("Ethereum address is not defined");
     }
 
-    let chain = contracts[network]?.chain;
+    let chain = contractsConfig[network]?.chain;
     if (!chain) {
       throw new Error("Network is not supported");
     }
@@ -229,7 +218,7 @@ function RBUProvider({
       transport: http(),
     });
 
-    let chainContracts = contracts[network];
+    let chainContracts = contractsConfig[network];
     if (!chainContracts) {
       throw new Error("Contracts are not defined");
     }
@@ -304,7 +293,7 @@ function RBUProviderWrapper({
 }
 
 function useRBU() {
-  return useContext(RBUContext);
+  return useContext(RBUContext) as RBUContextType;
 }
 
 export { RBUProviderWrapper as RBUProvider, useRBU };

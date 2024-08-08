@@ -67,7 +67,7 @@ export default function CryptoSpacePrisonPlayerMintConmanButton() {
       });
 
       // Allow tokens transfer
-      const approveTxHash = await ethExecute?.(
+      const { txHash: approveTxHash } = await ethExecute?.(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.usdToken,
         encodeFunctionData({
@@ -86,7 +86,7 @@ export default function CryptoSpacePrisonPlayerMintConmanButton() {
       });
 
       // Mint
-      const mintTxHash = await ethExecute?.(
+      const { txExplorerLink: mintTxExplorerLink } = await ethExecute?.(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         encodeFunctionData({
@@ -95,15 +95,11 @@ export default function CryptoSpacePrisonPlayerMintConmanButton() {
         })
       );
 
-      // TODO: Use explorer link from ethExecute function
       toast({
         title: "Conman minted 🤘",
         description: "Refresh the page to see the updates",
         action: (
-          <Link
-            href={`https://optimism-sepolia.blockscout.com/tx/${mintTxHash}`}
-            target="_blank"
-          >
+          <Link href={mintTxExplorerLink} target="_blank">
             <ToastAction altText="Open Blockscout">Blockscout</ToastAction>
           </Link>
         ),

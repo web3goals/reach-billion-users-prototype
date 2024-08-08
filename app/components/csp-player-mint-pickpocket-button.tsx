@@ -20,7 +20,7 @@ export default function CryptoSpacePrisonPlayerMintPickpocketButton() {
   async function mintPickpocket() {
     try {
       setIsFormSubmitting(true);
-      const txHash = await ethExecute?.(
+      const { txExplorerLink: mintTxExplorerLink } = await ethExecute?.(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         encodeFunctionData({
@@ -33,10 +33,7 @@ export default function CryptoSpacePrisonPlayerMintPickpocketButton() {
         title: "Pickpocket minted 🤘",
         description: "Refresh the page to see the updates",
         action: (
-          <Link
-            href={`https://optimism-sepolia.blockscout.com/tx/${txHash}`}
-            target="_blank"
-          >
+          <Link href={mintTxExplorerLink} target="_blank">
             <ToastAction altText="Open Blockscout">Blockscout</ToastAction>
           </Link>
         ),
