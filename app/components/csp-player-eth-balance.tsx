@@ -1,25 +1,21 @@
-"use client";
-
-import { cryptoSpacePrisonAbi } from "@/abi/cryptoSpacePrison";
+import { usdTokenAbi } from "@/abi/usdToken";
 import { cryptoSpacePrisonConfig } from "@/config/csp";
 import useError from "@/hooks/useError";
 import { cn } from "@/lib/utils";
 import { useRBU } from "@/library/components/rbu-provider";
 import { ClassValue } from "clsx";
 import { useEffect, useState } from "react";
-import { Address, createPublicClient, http } from "viem";
+import { createPublicClient, formatEther, http } from "viem";
 import { Skeleton } from "./ui/skeleton";
 
-export default function CryptoSpacePrisonPlayerCharacters(props: {
+export default function CryptoSpacePrisonPlayerEthBalance(props: {
   className?: ClassValue;
 }) {
   const { handleError } = useError();
   const { ethAddress, getEthSenderAddress } = useRBU();
-  const [characters, setCharacters] = useState<
-    { pickpocketAmount: string; conmanAmount: string } | undefined
-  >();
+  const [usdtBalance, setUsdtBalance] = useState<bigint | undefined>();
 
-  async function loadCharacters() {
+  async function loadBalance() {
     try {
       const ethAaAddress = await getEthSenderAddress(
         cryptoSpacePrisonConfig.network
@@ -28,35 +24,27 @@ export default function CryptoSpacePrisonPlayerCharacters(props: {
         chain: cryptoSpacePrisonConfig.chain,
         transport: http(),
       });
-      const cell = await publicClient.readContract({
-        address: cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
-        abi: cryptoSpacePrisonAbi,
-        functionName: "getCell",
+      const usdtBalance = await publicClient.readContract({
+        address: cryptoSpacePrisonConfig.contracts.usdToken,
+        abi: usdTokenAbi,
+        functionName: "balanceOf",
         args: [ethAaAddress],
       });
-      setCharacters({
-        pickpocketAmount: cell.pickpocketAmount.toString(),
-        conmanAmount: cell.conmanAmount.toString(),
-      });
+      setUsdtBalance(usdtBalance);
     } catch (error: any) {
       handleError(error, true);
     }
   }
 
   useEffect(() => {
-    loadCharacters();
+    loadBalance();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethAddress]);
 
-  if (characters) {
+  if (usdtBalance) {
     return (
       <div className={cn(props.className)}>
-        <p className="text-sm">
-          👶 Common pickpocket – {characters.pickpocketAmount}
-        </p>
-        <p className="text-sm">
-          🥸 Legendary conman – {characters.conmanAmount}
-        </p>
+        <p className="text-sm">{formatEther(usdtBalance)} USDT</p>
       </div>
     );
   }

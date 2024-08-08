@@ -6,8 +6,9 @@ import { cn } from "@/lib/utils";
 import { useRBU } from "@/library/components/rbu-provider";
 import { ClassValue } from "clsx";
 import CryptoSpacePrisonPlayerCharacters from "./csp-player-characters";
-import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
+import CryptoSpacePrisonPlayerEthBalance from "./csp-player-eth-balance";
 import CryptoSpacePrisonPlayerMintConmanButton from "./csp-player-mint-conman-button";
+import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
 
 export default function CryptoSpacePrisonPlayerConnected(props: {
   className?: ClassValue;
@@ -47,7 +48,6 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
             <p className="text-sm break-all">❓</p>
           </div>
           <div className="flex flex-col md:flex-row md:gap-3">
-            {/* TODO: Use blockscout link */}
             <p className="min-w-[80px] text-sm text-muted-foreground">
               Eth Address:
             </p>
@@ -57,14 +57,12 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
             <p className="min-w-[80px] text-sm text-muted-foreground">
               Eth Balance:
             </p>
-            {/* TODO: Implement */}
-            <p className="text-sm break-all">❓</p>
+            <CryptoSpacePrisonPlayerEthBalance />
           </div>
           <div className="flex flex-col md:flex-row md:gap-3">
             <p className="min-w-[80px] text-sm text-muted-foreground">
               Characters:
             </p>
-            {/* TODO: Implement */}
             <CryptoSpacePrisonPlayerCharacters />
           </div>
         </div>
