@@ -9,6 +9,7 @@ import CryptoSpacePrisonPlayerCharacters from "./csp-player-characters";
 import CryptoSpacePrisonPlayerEthBalance from "./csp-player-eth-balance";
 import CryptoSpacePrisonPlayerMintConmanButton from "./csp-player-mint-conman-button";
 import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
+import CryptoSpacePrisonPlayerSellTonButton from "./csp-player-sell-ton-button";
 import CryptoSpacePrisonPlayerTonBalance from "./csp-player-ton-balance";
 
 export default function CryptoSpacePrisonPlayerConnected(props: {
@@ -70,10 +71,7 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
         <div className="flex flex-col gap-3 mt-8">
           <CryptoSpacePrisonPlayerMintPickpocketButton />
           <CryptoSpacePrisonPlayerMintConmanButton />
-          {/* TODO: Implement */}
-          <Button variant="outline" onClick={() => {}}>
-            🏦 Buy ETH for Toncoin
-          </Button>
+          <CryptoSpacePrisonPlayerSellTonButton />
           <Button variant="outline" onClick={() => tonDisconnect()}>
             👋 Disconnect Telegram
           </Button>

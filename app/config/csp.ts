@@ -4,8 +4,9 @@ export const cryptoSpacePrisonConfig = {
   network: "optimismSepolia",
   chain: optimismSepolia,
   contracts: {
-    usdToken: "0x17DC361D05E1A608194F508fFC4102717666779f" as `0x${string}`,
+    usdToken: "0x1b21550F42E993d1b692d18D79bCd783638633F2" as `0x${string}`,
+    exchanger: "0x418d621b98Cc75a09327725620F9ec949615396E" as `0x${string}`,
     cryptoSpacePrison:
-      "0x9cAAb0Bf70BD0e71307BfaBeb1E8eC092c81e493" as `0x${string}`,
+      "0x4F316c6536Ce3ee94De802a9EfDb20484Ec4BDF9" as `0x${string}`,
   },
 };

@@ -41,7 +41,7 @@ export default function CryptoSpacePrisonPlayerEthBalance(props: {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethAddress]);
 
-  if (usdtBalance) {
+  if (usdtBalance != undefined) {
     return (
       <div className={cn(props.className)}>
         <p className="text-sm">{formatEther(usdtBalance)} USDT</p>
