@@ -29,7 +29,7 @@ export default function CryptoSpacePrisonPlayerCharacters(props: {
         transport: http(),
       });
       const cell = await publicClient.readContract({
-        address: cryptoSpacePrisonConfig.contract,
+        address: cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         abi: cryptoSpacePrisonAbi,
         functionName: "getCell",
         args: [ethAaAddress as Address],

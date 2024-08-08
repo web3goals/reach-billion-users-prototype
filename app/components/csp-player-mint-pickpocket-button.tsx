@@ -22,7 +22,7 @@ export default function CryptoSpacePrisonPlayerMintPickpocketButton() {
       setIsFormSubmitting(true);
       const txHash = await ethExecute?.(
         cryptoSpacePrisonConfig.network,
-        cryptoSpacePrisonConfig.contract,
+        cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         encodeFunctionData({
           abi: cryptoSpacePrisonAbi,
           functionName: "mintPickpocket",

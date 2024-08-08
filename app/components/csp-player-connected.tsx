@@ -7,6 +7,7 @@ import { useRBU } from "@/library/components/rbu-provider";
 import { ClassValue } from "clsx";
 import CryptoSpacePrisonPlayerCharacters from "./csp-player-characters";
 import CryptoSpacePrisonPlayerMintPickpocketButton from "./csp-player-mint-pickpocket-button";
+import CryptoSpacePrisonPlayerMintConmanButton from "./csp-player-mint-conman-button";
 
 export default function CryptoSpacePrisonPlayerConnected(props: {
   className?: ClassValue;
@@ -70,10 +71,7 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
         {/* Actions */}
         <div className="flex flex-col gap-3 mt-8">
           <CryptoSpacePrisonPlayerMintPickpocketButton />
-          {/* TODO: Implement */}
-          <Button variant="secondary" onClick={() => {}}>
-            🥸 Mint legendary conman FOR 0.01 ETH
-          </Button>
+          <CryptoSpacePrisonPlayerMintConmanButton />
           {/* TODO: Implement */}
           <Button variant="outline" onClick={() => {}}>
             🏦 Buy ETH for Toncoin
