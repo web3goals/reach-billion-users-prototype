@@ -20,7 +20,7 @@ export default function CryptoSpacePrisonPlayerMintPickpocketButton() {
   async function mintPickpocket() {
     try {
       setIsFormSubmitting(true);
-      const { txExplorerLink: mintTxExplorerLink } = await ethExecute?.(
+      const { txExplorerLink: mintTxExplorerLink } = await ethExecute(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         encodeFunctionData({

@@ -14,14 +14,14 @@ export default function CryptoSpacePrisonPlayerCharacters(props: {
   className?: ClassValue;
 }) {
   const { handleError } = useError();
-  const { ethAddress, getEthAaAddress } = useRBU();
+  const { ethAddress, getEthSenderAddress } = useRBU();
   const [characters, setCharacters] = useState<
     { pickpocketAmount: string; conmanAmount: string } | undefined
   >();
 
   async function loadCharacters() {
     try {
-      const ethAaAddress = await getEthAaAddress?.(
+      const ethAaAddress = await getEthSenderAddress(
         cryptoSpacePrisonConfig.network
       );
       const publicClient = createPublicClient({

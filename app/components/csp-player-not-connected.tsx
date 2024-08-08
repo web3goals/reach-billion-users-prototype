@@ -12,7 +12,7 @@ export default function CryptoSpacePrisonPlayerNotConnected(props: {
 
   return (
     <div className={cn("flex flex-row gap-4", props.className)}>
-      <Button onClick={() => tonConnect?.()}>Connect Telegram</Button>
+      <Button onClick={() => tonConnect()}>Connect Telegram</Button>
       <Button variant="secondary" disabled>
         Connect Ethererum Wallet
       </Button>

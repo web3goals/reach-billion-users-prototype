@@ -1,9 +1,11 @@
 "use client";
 
 import { accountAbi } from "@/library/abi/account";
-import { accountFactoryAbi } from "@/library/abi/accountFactory";
 import { entryPointAbi } from "@/library/abi/entryPoint";
 import {
+  getFakeBundler,
+  getInitParams,
+  getSender,
   packUserOperation,
   UserOperation,
 } from "@/library/lib/accountAbstraction";
@@ -17,8 +19,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import {
   Address,
   createPublicClient,
-  createWalletClient,
-  decodeErrorResult,
   encodeFunctionData,
   Hash,
   Hex,
@@ -37,7 +37,7 @@ type RBUContextType = {
     executeDestination: Address,
     executeFunction: Hex
   ) => Promise<{ txHash: Hash; txExplorerLink: string }>;
-  getEthAaAddress: (network: string) => Promise<Address>;
+  getEthSenderAddress: (network: string) => Promise<Address>;
 };
 
 const RBUContext = createContext<RBUContextType | null>(null);
@@ -63,7 +63,9 @@ function RBUProvider({
     }
   }
 
-  // TODO: Hide fake bundler in API
+  // TODO: Implement
+  async function initEthSenderAddress() {}
+
   async function ethExecute(
     network: string,
     executeDestination: Address,
@@ -72,72 +74,36 @@ function RBUProvider({
     if (!ethAddress) {
       throw new Error("Ethereum address is not defined");
     }
-
-    let chain = contractsConfig[network]?.chain;
-    if (!chain) {
+    const contracts = contractsConfig[network];
+    if (!contracts) {
       throw new Error("Network is not supported");
     }
 
-    const fakeBundlerAccount = privateKeyToAccount(
-      process.env.NEXT_PUBLIC_FAKE_BUNDLER_ACCOUNT_PRIVATE_KEY as `0x${string}`
+    const { initAddr, initCallData, initCode } = getInitParams(
+      ethAddress,
+      contracts
     );
-    console.log("fakeBundler:", fakeBundlerAccount.address);
+    const sender = await getSender(initCode, contracts);
 
     const publicClient = createPublicClient({
-      chain: chain,
+      chain: contracts.chain,
       transport: http(),
     });
 
-    const fakeBundlerWalletClient = createWalletClient({
-      account: fakeBundlerAccount,
-      chain: chain,
-      transport: http(),
-    });
-
-    let chainContracts = contractsConfig[network];
-    if (!chainContracts) {
-      throw new Error("Contracts are not defined");
-    }
-
-    const initAddr = chainContracts.accountFactory;
-    const initCallData = encodeFunctionData({
-      abi: accountFactoryAbi,
-      functionName: "createAccount",
-      args: [ethAddress],
-    });
-    let initCode = initAddr + initCallData.slice(2);
-    console.log("initCode:", initCode);
-
-    let sender;
-    try {
-      await fakeBundlerWalletClient.writeContract({
-        address: chainContracts.entryPoint,
-        abi: entryPointAbi,
-        functionName: "getSenderAddress",
-        args: [initCode as `0x${string}`],
-      });
-    } catch (error: any) {
-      const value = decodeErrorResult({
-        abi: entryPointAbi,
-        data: error?.cause?.cause?.cause?.cause?.cause?.data as `0x${string}`,
-      });
-      sender = value.args[0];
-    }
-    console.log("sender:", sender);
-
+    let initCodeFixed = initCode;
     const code = await publicClient.getBytecode({
-      address: sender as `0x${string}`,
+      address: sender,
     });
     if (code) {
-      initCode = "0x";
+      initCodeFixed = "0x";
     }
     console.log("code:", code);
 
     const nonce = await publicClient.readContract({
-      address: chainContracts.entryPoint,
+      address: contracts.entryPoint,
       abi: entryPointAbi,
       functionName: "getNonce",
-      args: [sender as `0x${string}`, BigInt(0)],
+      args: [sender, BigInt(0)],
     });
     console.log("nonce:", nonce);
 
@@ -149,14 +115,14 @@ function RBUProvider({
     console.log("callData:", callData);
 
     const initCallGasLimit = await publicClient.estimateGas({
-      account: chainContracts.entryPoint,
-      to: sender as `0x${string}`,
+      account: contracts.entryPoint,
+      to: sender,
       data: callData,
     });
     console.log("initCallGasLimit:", initCallGasLimit);
 
     const initVerificationGasLimit = await publicClient.estimateGas({
-      account: chainContracts.entryPoint,
+      account: contracts.entryPoint,
       to: initAddr,
       data: initCallData,
     });
@@ -164,17 +130,18 @@ function RBUProvider({
 
     const block = await publicClient.getBlock({ blockTag: "latest" });
 
+    // Prepare user operations
     const userOp: UserOperation = {
-      sender: sender as Address,
+      sender: sender,
       nonce: nonce,
-      initCode: initCode as Hex,
+      initCode: initCodeFixed,
       callData: callData,
       callGasLimit: initCallGasLimit + BigInt(55_000),
       verificationGasLimit: initVerificationGasLimit + BigInt(150_000),
       preVerificationGas: BigInt(21_000),
       maxFeePerGas: block!.baseFeePerGas! + BigInt(1e9),
       maxPriorityFeePerGas: BigInt(1e9), // 1 gwei
-      paymaster: chainContracts.paymaster,
+      paymaster: contracts.paymaster,
       paymasterData: "0x",
       paymasterVerificationGasLimit: BigInt(30000),
       paymasterPostOpGasLimit: BigInt(0),
@@ -183,72 +150,38 @@ function RBUProvider({
     let packedUserOp: any = packUserOperation(userOp);
     console.log("packedUserOp:", packedUserOp);
 
-    const tx = await fakeBundlerWalletClient.writeContract({
-      address: chainContracts.entryPoint,
+    // Define fake bundler
+    const { fakeBundlerAccount, fakeBundlerWalletClient } =
+      getFakeBundler(contracts);
+
+    // Send user operation
+    const txHash = await fakeBundlerWalletClient.writeContract({
+      account: fakeBundlerAccount,
+      address: contracts.entryPoint,
       abi: entryPointAbi,
       functionName: "handleOps",
       args: [[packedUserOp], fakeBundlerAccount.address],
+      chain: contracts.chain,
     });
-    console.log("tx:", tx);
+    console.log("txHash:", txHash);
 
     return {
-      txHash: tx,
-      txExplorerLink: `${chainContracts.explorer}/tx/${tx}`,
+      txHash: txHash,
+      txExplorerLink: `${contracts.explorer}/tx/${txHash}`,
     };
   }
 
-  async function getEthAaAddress(network: string): Promise<Address> {
+  async function getEthSenderAddress(network: string): Promise<Address> {
     if (!ethAddress) {
       throw new Error("Ethereum address is not defined");
     }
-
-    let chain = contractsConfig[network]?.chain;
-    if (!chain) {
+    const contracts = contractsConfig[network];
+    if (!contracts) {
       throw new Error("Network is not supported");
     }
-
-    const fakeBundlerAccount = privateKeyToAccount(
-      process.env.NEXT_PUBLIC_FAKE_BUNDLER_ACCOUNT_PRIVATE_KEY as `0x${string}`
-    );
-    console.log("fakeBundler:", fakeBundlerAccount.address);
-
-    const fakeBundlerWalletClient = createWalletClient({
-      account: fakeBundlerAccount,
-      chain: chain,
-      transport: http(),
-    });
-
-    let chainContracts = contractsConfig[network];
-    if (!chainContracts) {
-      throw new Error("Contracts are not defined");
-    }
-
-    let initCode =
-      chainContracts.accountFactory +
-      encodeFunctionData({
-        abi: accountFactoryAbi,
-        functionName: "createAccount",
-        args: [ethAddress],
-      }).slice(2);
-    console.log("initCode:", initCode);
-
-    let sender;
-    try {
-      await fakeBundlerWalletClient.writeContract({
-        address: chainContracts.entryPoint,
-        abi: entryPointAbi,
-        functionName: "getSenderAddress",
-        args: [initCode as `0x${string}`],
-      });
-    } catch (error: any) {
-      const value = decodeErrorResult({
-        abi: entryPointAbi,
-        data: error?.cause?.cause?.cause?.cause?.cause?.data as `0x${string}`,
-      });
-      sender = value.args[0];
-    }
-    console.log("sender:", sender);
-    return sender as Address;
+    const { initCode } = getInitParams(ethAddress, contracts);
+    const sender = await getSender(initCode, contracts);
+    return sender;
   }
 
   useEffect(() => {
@@ -268,7 +201,7 @@ function RBUProvider({
         tonDisconnect: () => tonConnectUI.disconnect(),
         ethAddress: ethAddress,
         ethExecute: ethExecute,
-        getEthAaAddress: getEthAaAddress,
+        getEthSenderAddress: getEthSenderAddress,
       }}
     >
       {children}

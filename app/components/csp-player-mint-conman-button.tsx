@@ -67,7 +67,7 @@ export default function CryptoSpacePrisonPlayerMintConmanButton() {
       });
 
       // Allow tokens transfer
-      const { txHash: approveTxHash } = await ethExecute?.(
+      const { txHash: approveTxHash } = await ethExecute(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.usdToken,
         encodeFunctionData({
@@ -86,7 +86,7 @@ export default function CryptoSpacePrisonPlayerMintConmanButton() {
       });
 
       // Mint
-      const { txExplorerLink: mintTxExplorerLink } = await ethExecute?.(
+      const { txExplorerLink: mintTxExplorerLink } = await ethExecute(
         cryptoSpacePrisonConfig.network,
         cryptoSpacePrisonConfig.contracts.cryptoSpacePrison,
         encodeFunctionData({

@@ -76,7 +76,7 @@ export default function CryptoSpacePrisonPlayerConnected(props: {
           <Button variant="outline" onClick={() => {}}>
             🏦 Buy ETH for Toncoin
           </Button>
-          <Button variant="outline" onClick={() => tonDisconnect?.()}>
+          <Button variant="outline" onClick={() => tonDisconnect()}>
             👋 Disconnect Telegram
           </Button>
         </div>
