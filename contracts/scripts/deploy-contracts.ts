@@ -58,6 +58,24 @@ async function main() {
       `Contract 'CryptoSpacePrison' deployed to: ${await contract.getAddress()}`
     );
   }
+
+  if (
+    !CONTRACTS[network].exchanger &&
+    CONTRACTS[network].usdToken &&
+    CONTRACTS[network].pyth &&
+    CONTRACTS[network].pythPriceFeedId
+  ) {
+    const contractFactory = await ethers.getContractFactory("Exchanger");
+    const contract = await contractFactory.deploy(
+      CONTRACTS[network].usdToken,
+      CONTRACTS[network].pyth,
+      CONTRACTS[network].pythPriceFeedId
+    );
+    await contract.waitForDeployment();
+    console.log(
+      `Contract 'Exchanger' deployed to: ${await contract.getAddress()}`
+    );
+  }
 }
 
 main().catch((error) => {

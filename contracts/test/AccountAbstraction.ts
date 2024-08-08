@@ -263,7 +263,7 @@ describe("AccountAbstraction", function () {
     });
 
     // Mint usd tokens for sender
-    await usdTokenContract.mint(10, sender);
+    await usdTokenContract.mint(ethers.parseEther("10"), sender);
 
     // Mint paid character
     await sendUserOperation({

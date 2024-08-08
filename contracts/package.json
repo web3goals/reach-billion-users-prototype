@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@pythnetwork/pyth-evm-js": "^1.61.0",
+    "dotenv": "^16.4.5",
     "hardhat": "^2.22.7"
   },
   "dependencies": {
     "@account-abstraction/contracts": "^0.7.0",
     "@openzeppelin/contracts": "^5.0.2",
-    "dotenv": "^16.4.5"
+    "@pythnetwork/pyth-sdk-solidity": "^3.1.0"
   }
 }
