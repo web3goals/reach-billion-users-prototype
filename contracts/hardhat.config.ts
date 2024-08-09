@@ -23,6 +23,10 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.base.org",
       accounts: [process.env.PRIVATE_KEY as string],
     },
+    conduitRbuNetwork: {
+      url: "https://rpc-rbu-network-38b1oaxsp9.t.conduit.xyz",
+      accounts: [process.env.PRIVATE_KEY as string],
+    },
   },
 };
 
