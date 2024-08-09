@@ -1,5 +1,5 @@
 import { Address, Chain } from "viem";
-import { baseSepolia, optimismSepolia } from "viem/chains";
+import { baseSepolia, modeTestnet, optimismSepolia } from "viem/chains";
 
 export type Contracts = {
   chain: Chain;
@@ -49,5 +49,12 @@ export const contractsConfig: { [key: string]: Contracts } = {
     accountFactory: "0x02008a8DBc938bd7930bf370617065B6B0c1221a",
     paymaster: "0xFe0AeD5cBEE89869FF505e10A5eBb75e9FC819D7",
     explorer: "https://explorer-rbu-network-38b1oaxsp9.t.conduit.xyz/",
+  },
+  modeSepolia: {
+    chain: modeTestnet,
+    entryPoint: "0x96E6AF6E9e400d0Cd6a4045F122df22BCaAAca59",
+    accountFactory: "0x02008a8DBc938bd7930bf370617065B6B0c1221a",
+    paymaster: "0xFe0AeD5cBEE89869FF505e10A5eBb75e9FC819D7",
+    explorer: "https://sepolia.explorer.mode.network/",
   },
 };
