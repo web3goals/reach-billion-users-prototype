@@ -37,11 +37,7 @@ export function SiteHeader() {
               <Link href="/dashboard">
                 <DropdownMenuItem>🪄 Dashboard</DropdownMenuItem>
               </Link>
-              {/* TODO: Use real link to documentation */}
-              <Link
-                href={`${siteConfig.links.github}/blob/main/README.md`}
-                target="_blank"
-              >
+              <Link href={siteConfig.links.docs} target="_blank">
                 <DropdownMenuItem>📄 Docs</DropdownMenuItem>
               </Link>
               <Link href="/cryptospaceprison" target="_blank">
