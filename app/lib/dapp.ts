@@ -5,6 +5,7 @@ export interface DApp {
   name: string;
   description: string;
   created: Date;
+  apiKey?: string;
 }
 
 export function getDApps(): DApp[] {
@@ -12,9 +13,10 @@ export function getDApps(): DApp[] {
   return localStorageValue ? JSON.parse(localStorageValue) : [];
 }
 
+// TODO: Generate random api key
 export function saveDApp(dApp: DApp) {
   const dApps = getDApps();
-  dApps.push(dApp);
+  dApps.push({ ...dApp, apiKey: "xyz" });
   localStorage.setItem(LOCAL_STORAGE_KEY_DAAPS, JSON.stringify(dApps));
 }
 

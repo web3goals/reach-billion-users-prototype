@@ -1,7 +1,7 @@
 "use client";
 
 import useError from "@/hooks/useError";
-import { saveDApp } from "@/lib/localStorage";
+import { saveDApp } from "@/lib/dapp";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
