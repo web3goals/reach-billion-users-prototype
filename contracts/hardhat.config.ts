@@ -19,6 +19,10 @@ const config: HardhatUserConfig = {
       url: "https://sepolia.optimism.io",
       accounts: [process.env.PRIVATE_KEY as string],
     },
+    baseSepolia: {
+      url: "https://sepolia.base.org",
+      accounts: [process.env.PRIVATE_KEY as string],
+    },
   },
 };
 

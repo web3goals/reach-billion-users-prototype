@@ -13,7 +13,7 @@ async function main() {
   await entryPointContract.depositTo(
     CONTRACTS[network].paymaster as `0x${string}`,
     {
-      value: ethers.parseEther("0.002"),
+      value: ethers.parseEther("0.01"),
     }
   );
   const paymasterDepositInfo = await entryPointContract.getDepositInfo(
