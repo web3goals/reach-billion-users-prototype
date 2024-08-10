@@ -9,7 +9,7 @@ export function DAppList() {
   const [dApps, setDApps] = useState<DApp[] | undefined>();
 
   useEffect(() => {
-    getDApps();
+    setDApps(getDApps());
   }, []);
 
   return (
