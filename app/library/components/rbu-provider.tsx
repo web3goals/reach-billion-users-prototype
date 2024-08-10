@@ -14,8 +14,8 @@ import {
   TonConnectUIProvider,
   useTonAddress,
   useTonConnectUI,
-  useTonWallet,
 } from "@tonconnect/ui-react";
+import axios from "axios";
 import { createContext, useContext, useEffect, useState } from "react";
 import {
   Address,
@@ -27,7 +27,6 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { contractsConfig } from "../config/contracts";
-import axios from "axios";
 
 type RBUContextType = {
   tonAddress: string | undefined;

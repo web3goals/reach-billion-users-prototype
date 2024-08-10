@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import { useRBU } from "@/library/components/rbu-provider";
 import { ClassValue } from "clsx";
 import { useEffect, useState } from "react";
-import { Address, createPublicClient, http } from "viem";
+import { createPublicClient, http } from "viem";
 import { Skeleton } from "./ui/skeleton";
 
 export default function CryptoSpacePrisonPlayerCharacters(props: {

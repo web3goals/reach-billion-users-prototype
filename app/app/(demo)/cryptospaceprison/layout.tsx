@@ -17,10 +17,10 @@ export default function CryptoSpacePrisonLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const rbaApiKey = "e93be60b-7a8d-445f-b8e9-860567c43ad6";
+  const rbuApiKey = "e93be60b-7a8d-445f-b8e9-860567c43ad6";
 
   return (
-    <RBUProvider apiKey={rbaApiKey}>
+    <RBUProvider apiKey={rbuApiKey}>
       <div className="relative flex min-h-screen flex-col">
         <div className="flex-1">
           {children}
