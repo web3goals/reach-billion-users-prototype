@@ -1,3 +1,5 @@
+"use client";
+
 import { DApp, deleteDApp } from "@/lib/dapp";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
