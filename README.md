@@ -12,13 +12,13 @@ A dev kit to integrate Telegram Open Network into your dApp on Ethereum without 
 
 ## 📄 Installation
 
-Step 1. Install RBU library and its peer dependencies. **Note:** It's a React library.
+**Step 1.** Install RBU library and its peer dependencies. **Note:** It's a React library.
 
 ```bash
 npm install rbu viem axios @tonconnect/ui-react
 ```
 
-Step 2. Wrap your application with `RBUProvider`. **Note:** API key can be obtained in the RBU application.
+**Step 2.** Wrap your application with `RBUProvider`. **Note:** API key can be obtained in the RBU application.
 
 ```tsx
 import { RBUProvider } from "rbu";
@@ -28,7 +28,7 @@ const App = () => {
 };
 ```
 
-Step 3. Use RBU hooks to connect and disconnect Telegram wallet.
+**Step 3.** Use RBU hooks to connect and disconnect Telegram wallet.
 
 ```tsx
 const { tonConnect, tonDisconnect } = useRBU();
@@ -36,7 +36,7 @@ const { tonConnect, tonDisconnect } = useRBU();
 <Button onClick={() => tonConnect()}>Connect Telegram</Button>;
 ```
 
-Step 4. Use RBU hooks to send Ethereum transactions using Telegram wallet. **Note:** RBU library supports only `optimismSepolia`, `baseSepolia`, `conduitRbuNetwork`, `modeSepolia` networks.
+**Step 4.** Use RBU hooks to send Ethereum transactions using Telegram wallet. **Note:** RBU library supports only `optimismSepolia`, `baseSepolia`, `conduitRbuNetwork`, `modeSepolia` networks.
 
 ```tsx
 const { ethExecute } = useRBU();
