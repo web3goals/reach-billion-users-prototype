@@ -51,12 +51,7 @@ export function DAppCreateForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsFormSubmitting(true);
-      saveDApp({
-        icon: values.icon,
-        name: values.name,
-        description: values.description,
-        created: new Date(),
-      });
+      saveDApp(values.icon, values.name, values.description);
       toast({
         title: "dApp created 👌",
       });

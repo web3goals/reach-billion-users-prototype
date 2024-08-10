@@ -1,9 +1,9 @@
-import { DApp } from "@/lib/dapp";
+import { DApp, deleteDApp } from "@/lib/dapp";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { toast } from "./ui/use-toast";
 
-export function DAppCard(props: { dApp: DApp }) {
+export function DAppCard(props: { dApp: DApp; onDelete: () => void }) {
   return (
     <div className="w-full flex flex-row gap-4 border rounded px-6 py-8">
       <div>
@@ -55,10 +55,13 @@ export function DAppCard(props: { dApp: DApp }) {
           >
             👥 Users & Stats
           </Button>
-          {/* TODO: Implement */}
           <Button
             variant="secondary"
-            onClick={() => toast({ title: "Not implemented yet 🥲" })}
+            onClick={() => {
+              deleteDApp(props.dApp.id);
+              toast({ title: "Deleted 👌" });
+              props.onDelete();
+            }}
           >
             ❌ Delete
           </Button>
