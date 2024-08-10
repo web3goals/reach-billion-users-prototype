@@ -76,4 +76,4 @@ const { txHash, txExplorerLink } = await ethExecute(
 
 ## 🏗️ Architecture
 
-![Architecture](/architecture.png)
+![Architecture](/Architecture.png)
