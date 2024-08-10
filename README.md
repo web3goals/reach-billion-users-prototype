@@ -4,7 +4,7 @@ A dev kit to integrate Telegram Open Network into your dApp on Ethereum without 
 
 ## 🛠️ Technologies
 
-- The Optimism, Base, Conduit, and Mode networks are used for smart contracts that handle all operations for account abstraction, paymaster, and token exchange.
+- Optimism, Base, Conduit, and Mode networks are used for smart contracts that handle all operations for account abstraction, paymaster, and token exchange.
 - Pyth oracle is used to get price feeds for exchanging user toncoins to usdt.
 - Blockscout is used as the main block explorer for the links that the library provides to developers and users.
 
