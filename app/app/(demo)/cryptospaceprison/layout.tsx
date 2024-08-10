@@ -17,7 +17,7 @@ export default function CryptoSpacePrisonLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const rbaApiKey = "qkgySNGqQm9TLvWkUNllqZxVefqXzcK";
+  const rbaApiKey = "e93be60b-7a8d-445f-b8e9-860567c43ad6";
 
   return (
     <RBUProvider apiKey={rbaApiKey}>
